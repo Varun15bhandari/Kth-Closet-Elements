@@ -1,0 +1,40 @@
+class Pair{
+    int first;
+    int second;
+    Pair(int first,int second){
+        this.first=first;
+        this.second=second;
+    }
+}
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+       PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> {
+            int cmp = Integer.compare(b.first, a.first);
+            if (cmp == 0) {
+                // If absolute differences are the same, compare by element value
+                return Integer.compare(b.second, a.second);
+            }
+            return cmp;
+        });
+
+        // Iterate through each number in the array
+        for (int num : arr) {
+            // Add pair with absolute difference and number
+            pq.add(new Pair(Math.abs(num - x), num));
+            // Keep only the k closest elements in the heap
+            if (pq.size() > k) {
+                pq.poll();
+            }
+        }
+
+        // Extract the closest elements from the priority queue
+        List<Integer> ans = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            ans.add(pq.poll().second);
+        }
+
+        // Sort the result list to match the required order
+        ans.sort(Integer::compareTo);
+        return ans;
+    }
+}
